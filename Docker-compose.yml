@@ -1,9 +1,16 @@
-version: '3.9'
+version: '3'
 services:
-  db1:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - DB_URL=postgres://postgres:postgres@db1:5432/db1
+    ports:
+      - "8080:8080"
+
+  db1:
+    image: postgres:13
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -14,9 +21,7 @@ services:
       - db1_data:/var/lib/postgresql/data
 
   db2:
-    build:
-      context: .
-      dockerfile: DockerfileDbSec
+    image: postgres:13
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 )
 
@@ -30,9 +31,9 @@ func main() {
 		log.Fatal(err)
 	}
 	
-	SendToDB(leastUsedDB.DB)
+	s := SendToDB(leastUsedDB.DB)
 	
-	fmt.Println("Data sent successfully.")
+	fmt.Printf("Data %s sent successfully.", s)
 }
 
 func NewDatabase(name, connStr string) (*Database, error) {
@@ -40,6 +41,14 @@ func NewDatabase(name, connStr string) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
+	
+	// Test the connection
+	err = db.Ping()
+	
+	if err != nil {
+		return nil, err
+	}
+	
 	defer db.Close()
 	
 	return &Database{Name: name, ConnStr: connStr, DB: db}, nil
