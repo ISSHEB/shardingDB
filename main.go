@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -14,17 +15,22 @@ type Database struct {
 }
 
 func main() {
-	connStr1 := "user=postgres password=postgres dbname=db1 sslmode=disable"
+	
+	_ = pq.Driver{}
+	connStr1 := "host=postgres_db1 user=postgres password=postgres dbname=db1 port=5432 sslmode=disable"
 	db1, err := NewDatabase("db1", connStr1)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db1.DB.Close()
 	
-	connStr2 := "user=postgres password=postgres dbname=db2 sslmode=disable"
+	connStr2 := "host=postgres_db2 user=postgres password=postgres dbname=db2 port=5432 sslmode=disable"
 	db2, err := NewDatabase("db2", connStr2)
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	defer db2.DB.Close()
 	
 	leastUsedDB, err := getDatabaseWithLessMemory(db1, db2)
 	if err != nil {
