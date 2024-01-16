@@ -22,15 +22,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db1.DB.Close()
 	
 	connStr2 := "host=postgres_db2 user=postgres password=postgres dbname=db2 port=5432 sslmode=disable"
 	db2, err := NewDatabase("db2", connStr2)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	defer db2.DB.Close()
 	
 	leastUsedDB, err := getDatabaseWithLessMemory(db1, db2)
 	if err != nil {
@@ -54,8 +51,6 @@ func NewDatabase(name, connStr string) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	
-	defer db.Close()
 	
 	return &Database{Name: name, ConnStr: connStr, DB: db}, nil
 }
