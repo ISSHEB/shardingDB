@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  db1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db1
+    ports:
+      - "5432:5432"
+    volumes:
+      - db1_data:/var/lib/postgresql/data
+
+  db2:
+    build:
+      context: .
+      dockerfile: DockerfileDbSec
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db2
+    ports:
+      - "5433:5432"
+    volumes:
+      - db2_data:/var/lib/postgresql/data
+
+volumes:
+  db1_data:
+  db2_data:
